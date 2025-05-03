@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیدا کننده قفسه کتاب</title>
+    <link rel="stylesheet" href="popup.css">
+    
+    <script src="constants.js"></script>
+
+    <script src="popup.js" defer></script>
+    <style>
+        @font-face {
+            font-family: 'Vazir';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@latest/dist/Vazir.woff2') format('woff2');
+        }
+        body {
+            width: 300px;
+            font-family: Vazir, Calibri;
+            text-align: center;
+            direction: rtl;
+        }
+    </style>
+</head>
+
+<body>
+    <h4>کتاب انتخاب شده:</h4>
+    <p id="selectedText">کتابی انتخاب نشده است.</p>
+
+    <h4>قفسه پیدا شده:</h4>
+    <p id="shelfResult">قفسه‌ای پیدا نشد.</p>
+</body>
+
+</html>

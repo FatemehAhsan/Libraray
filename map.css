@@ -1,0 +1,72 @@
+@font-face {
+    font-family: 'Vazir';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@latest/dist/Vazir.woff2') format('woff2');
+}
+
+body {
+    font-family: Vazir, Calibri;
+    text-align: center;
+}
+
+div {
+    margin-top: 10px;
+    font-weight: bold;
+    color: rgb(145, 106, 85) !important;
+}
+
+#library {
+    display: flex;
+    flex-flow: row;
+    gap: 1.5%;
+    justify-content: center;
+    align-items: center;
+}
+
+.shelf-table {
+    border-collapse: collapse;
+    justify-self: center;
+}
+
+.shelf-table tr {
+    color: white;
+}
+
+.shelf-table td {
+    width: 5px;
+    height: 10px;
+    text-align: center;
+    border: 1px solid rgb(145, 106, 85);
+    color: rgb(145, 106, 85);
+}
+  
+@keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+}
+
+.highlight {
+    background-color: rgb(0, 255, 89) !important;
+    animation: blinker 1s linear infinite;
+}
+
+.highlight_tr {
+    color: rgb(145, 106, 85) !important;
+}
+
+
+/* Add bold line in the middle */
+.shelf-table td:nth-child(6) {
+    border-right: 3px solid rgb(145, 106, 85); /* Bold vertical border */
+}
+
+.rotated {
+    transform: rotate(-90deg);
+}
+
+.lane {
+  background-color: black;
+  width: 3px;
+  height: 8px;
+  padding: 1px;
+}

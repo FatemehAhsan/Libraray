@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "پیدا کننده قفسه کتاب",
+  "version": "1.0",
+  "description": "قفسه کتاب را بر اساس محدوده شماره کتاب پیدا می کند.",
+  "permissions": ["activeTab", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["popup.js"],
+      "css": ["popup.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "host_permissions": ["<all_urls>"]
+}
+
