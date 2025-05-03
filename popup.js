@@ -1,15 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const button = document.createElement('button');
-    button.id = 'floating-library-button';
-    button.innerText = '📚 کتابخانه';
-    
-    button.addEventListener('click', () => {
-        window.open(chrome.runtime.getURL('popups.html'), '_blank');
-    });
-
-    document.body.appendChild(button);
-});
-
 document.addEventListener("DOMContentLoaded", async function () {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
