@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             rade = modifyStr(selectedText[1]);
             cutterText = modifyStr(selectedText[2]);
 
-            console.log("af "+ asliPish, rade, cutterText)
-
             if (!asliPish) {
                 document.getElementById("shelfResult").innerText = "عدد درستی پیدا نشد.";
                 document.getElementById("shelfResult").style.display = "block";
@@ -162,8 +160,6 @@ async function extractBookNumberFromPage() {
                                  .replace(/\s+/g, '')
                                  .trim() || '';
 
-            console.log("af "+ clean(asli?.textContent), clean(rade?.textContent), clean(cutter?.textContent))
-            
             return [
                 clean(asli?.textContent),
                 clean(rade?.textContent),
@@ -198,7 +194,6 @@ async function extractBookNumberFromPage() {
         });
 
         const raw = await response.text();
-        console.log("me "+ raw)
 
         // ---------- FIXED HERE: detect JSON inside HTML ----------
         let data = null;
@@ -227,8 +222,6 @@ async function extractBookNumberFromPage() {
         const RadeFContainer = clean(book.RadeFareiD);
         const CutterContainer = clean(book.ShomareKaterD);
 
-        console.log("me "+ AsliPish, RadeFContainer, CutterContainer)
-        
         return [AsliPish, RadeFContainer, CutterContainer];
 
     } catch (err) {
