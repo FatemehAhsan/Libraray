@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             rade = modifyStr(selectedText[1]);
             cutterText = modifyStr(selectedText[2]);
 
+            console.log("af "+ asliPish, rade, cutterText)
+
             if (!asliPish) {
                 document.getElementById("shelfResult").innerText = "عدد درستی پیدا نشد.";
                 document.getElementById("shelfResult").style.display = "block";
@@ -148,19 +150,93 @@ function convertPersianToEnglish(text) {
     );
 }
 
-function extractBookNumberFromPage() {
+async function extractBookNumberFromPage() {
     try {
-        // Get the parts from specific spans
-        const cutterText = document.getElementById('CutterContainer')?.textContent?.replace(/[\u200C-\u200F\u202A-\u202E]/g, '').replace(/\s+/g, '').trim() || '';
-        const radeText = document.getElementById('RadeFContainer')?.textContent?.replace(/[\u200C-\u200F\u202A-\u202E]/g, '').replace(/\s+/g, '') || '';
-        const asliPishText = document.getElementById('asliPish')?.textContent?.replace(/[\u200C-\u200F\u202A-\u202E]/g, '').replace(/\s+/g, '').trim() || '';
+        // 1) Try NOT-LOGGED-IN mode first
+        const cutter = document.getElementById('CutterContainer');
+        const rade = document.getElementById('RadeFContainer');
+        const asli = document.getElementById('asliPish');
 
-        // Combine the parts
-        return [asliPishText, radeText, cutterText];
-    } catch (e) {
-        return window.getSelection().toString(); // Fallback to selection if extraction fails
+        if (cutter || rade || asli) {
+            const clean = t => t?.replace(/[\u200C-\u200F\u202A-\u202E]/g, '')
+                                 .replace(/\s+/g, '')
+                                 .trim() || '';
+
+            console.log("af "+ clean(asli?.textContent), clean(rade?.textContent), clean(cutter?.textContent))
+            
+            return [
+                clean(asli?.textContent),
+                clean(rade?.textContent),
+                clean(cutter?.textContent)
+            ];
+        }
+
+        // 2) Extract recordNumber
+        let recordNumber = null;
+        document.querySelectorAll('#tbl1 tr').forEach(tr => {
+            const label = tr.querySelector('td:first-child')?.innerText.trim();
+            if (label.includes('شماره رکورد')) {
+                const val = tr.querySelector('td:nth-child(2) span')?.innerText || "";
+                recordNumber = convertPersianToEnglish(val).replace(/\D/g, '');
+            }
+        });
+
+        if (!recordNumber) {
+            return window.getSelection().toString();
+        }
+
+        const url = `/Search/FSearch/GetBookDetailsN/?recordNumber=${recordNumber}&matId=1&OrgIDType=10000`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: "{}"
+        });
+
+        const raw = await response.text();
+        console.log("me "+ raw)
+
+        // ---------- FIXED HERE: detect JSON inside HTML ----------
+        let data = null;
+
+        // Case 1: raw is pure JSON
+        if (raw.trim().startsWith("[")) {
+            data = JSON.parse(raw);
+        } else {
+            // Case 2: JSON is inside HTML → extract with regex
+            const jsonMatch = raw.match(/\[.*\]/s);
+            if (jsonMatch) {
+                data = JSON.parse(jsonMatch[0]);
+            }
+        }
+
+        if (!data) return ["", "", ""]; // nothing to parse
+
+        const book = data[0];
+
+        // Clean Persian invisible characters
+        const clean = t => t?.replace(/[\u200C-\u200F\u202A-\u202E]/g, '')
+                             .replace(/\s+/g, '')
+                             .trim() || '';
+
+        const AsliPish = clean(book.RadeAsliD);
+        const RadeFContainer = clean(book.RadeFareiD);
+        const CutterContainer = clean(book.ShomareKaterD);
+
+        console.log("me "+ AsliPish, RadeFContainer, CutterContainer)
+        
+        return [AsliPish, RadeFContainer, CutterContainer];
+
+    } catch (err) {
+        console.error(err);
+        return window.getSelection().toString();
     }
 }
+
 
 function pNametoNum(text) {
     return SHELF_NAMES.indexOf(text) + 1;
